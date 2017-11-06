@@ -1,4 +1,4 @@
-const { listTable } = require(`${__dirname}/../utils`)
+const { listTable } = require(`${__dirname}/../libs/utils`)
 
 let tplList = require(`${__dirname}/../templates`)
 

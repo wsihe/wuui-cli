@@ -1,7 +1,4 @@
 const { prompt } = require('inquirer')
-const { writeFile } = require('fs')
-const { listTable } = require(`${__dirname}/../utils`)
-const { resolve } = require('path')
 const chalk = require('chalk')
 const download = require('download-git-repo')
 const ora = require('ora')
