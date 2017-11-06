@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+const { resolve } = require('path')
+const res = command => resolve(__dirname, '../commands/', command)
+const program = require('commander')
+
+program
+  .command('list')
+  .description('List all the templates')
+  .alias('l')
+  .action(() => {
+    require(res('list'))
+  })

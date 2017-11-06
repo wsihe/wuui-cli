@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "wuui-cli",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "bin": {
+	"vue": "bin/vue",
+	"vue-init": "bin/vue-init",
+	"vue-list": "bin/vue-list"
   },
   "repository": {
     "type": "git",
@@ -17,9 +19,10 @@
   },
   "homepage": "https://github.com/wsihe/wuui-cli#readme",
   "dependencies": {
-    "chalk": "^1.1.3",
+	"chalk": "^2.1.0",
     "co": "^4.6.0",
     "co-prompt": "^1.0.0",
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+	"download-git-repo": "^1.0.1"
   }
 }
