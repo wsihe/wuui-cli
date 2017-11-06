@@ -1,0 +1,25 @@
+{
+  "name": "wuui-cli",
+  "version": "1.0.0",
+  "description": "wuui-cli",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wsihe/wuui-cli.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wsihe/wuui-cli/issues"
+  },
+  "homepage": "https://github.com/wsihe/wuui-cli#readme",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.9.0"
+  }
+}
