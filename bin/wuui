@@ -14,22 +14,35 @@ program
 program
   .usage('<command>')
 
+// Command: wuui init
+program
+  .command('init')
+  .description('生产一个新的')
+  .alias('i')
+  .action(() => {
+    require(res('init'))
+  })
 
+// Command: wuui lsit
 program
   .command('list')
-  .description('List all the templates')
+  .description('查询所有项目模版')
   .alias('l')
   .action(() => {
     require(res('list'))
   })
 
+// Command: wuui page [b ]
 program
-  .command('init')
-  .description('Generate a new project')
-  .alias('i')
+  .command('page [pageName]')
+  .alias('pa')
+  .description('创建新的页面')
+  .option('--name [pageName]', '页面名称')
+  .option('--description [pageDescription]', '页面描述')
   .action(() => {
-    require(res('init'))
+    require(res('page'))
   })
+
 
 program.parse(process.argv)
 
