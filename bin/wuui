@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 
 process.env.NODE_PATH = __dirname + '/../node_modules/'
-
 const { resolve } = require('path')
-
 const res = command => resolve(__dirname, '../commands/', command)
-
+const Page = res('page')
 const program = require('commander')
 
 program
@@ -32,15 +30,24 @@ program
     require(res('list'))
   })
 
-// Command: wuui page [b ]
+// Command: wuui page [pageName]
 program
   .command('page [pageName]')
   .alias('pa')
   .description('创建新的页面')
   .option('--name [pageName]', '页面名称')
   .option('--description [pageDescription]', '页面描述')
-  .action(() => {
-    require(res('page'))
+  .option('--sass', '启用sass')
+  .action(function(pageName, option) {
+    let page = new Page({
+      pageName: pageName || option.name,
+      description: option.description,
+      sass: option.sass
+    })
+    // 创建页面
+    page.create(function () {
+
+    })
   })
 
 
