@@ -111,10 +111,7 @@ var Page = Base.extend({
         choices: [{
           name: 'Sass/Compass',
           value: 'sass'
-        }, {
-          name: 'Less',
-          value: 'less'
-        }, {
+        },{
           name: '不需要',
           value: 'none'
         }]
@@ -131,8 +128,6 @@ var Page = Base.extend({
       }
       if (conf.sass) {
         answers.cssPretreatment = 'sass';
-      } else if (conf.less) {
-        answers.cssPretreatment = 'less';
       }
       _.assign(this.conf, answers);
       this.conf.date = ((new Date()).getFullYear()) + '-' + ((new Date()).getMonth() + 1) + '-' + ((new Date()).getDate());
