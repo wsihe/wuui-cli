@@ -19,9 +19,9 @@ var crypto = require('crypto');
 var chalk = require('chalk');
 var _ = require('lodash')
 
-var wrench = require('../util/wrench');
-var Class = require('../class');
-var Util = require('../util');
+var wrench = require('../../libs/wrench');
+var Class = require('./class');
+var Util = require('../../libs/index');
 
 var setting = Util.getSetting();
 

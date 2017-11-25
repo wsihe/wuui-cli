@@ -3,8 +3,8 @@ var fs = require('fs');
 var path = require('path');
 var chalk = require('chalk');
 var inquirer = require('inquirer');
-var Base = require('../base');
-var Util = require('../../util');
+var Base = require('./base/base');
+var Util = require('../libs/index');
 
 /**
  * @class Page

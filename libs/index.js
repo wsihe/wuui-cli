@@ -1,7 +1,6 @@
 var path = require('path');
 var fs = require('fs');
 var os = require('os');
-var crypto = require('crypto');
 var url = require('url');
 var _ = require('lodash');
 var chalk = require('chalk');
@@ -156,15 +155,6 @@ var Util = {
     };
   },
 
-  /**
-   * 根据内容生成md5
-   */
-  checksum: function (buf, length) {
-    if (!Buffer.isBuffer(buf)) {
-      buf = new Buffer(buf);
-    }
-    return crypto.createHash('md5').update(buf).digest('hex').slice(0, length || 8);
-  },
 
   /**
    * 判断是否是今天
