@@ -41,8 +41,7 @@ var Page = Base.extend({
       this.userName = process.env.USER || path.basename(userHome);
     }
     this.appConfPath = this.destinationPath('..', 'app-conf.js');
-    console.log(chalk.magenta('  Allo ' + this.userName + '! 我要开始创建页面了哦~'));
-    console.log('  need help? go and open issue: https://github.com/o2team/athena/issues/new');
+    console.log(chalk.magenta(this.userName + '开始创建页面！'));
   },
 
   /**
