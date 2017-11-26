@@ -17,7 +17,6 @@ var Page = Base.extend({
    * @param {String} [options.pageName] - 页面名称
    * @param {String} [options.description] - 页面描述
    * @param {Boolean} [options.sass] - 是否使用sass
-   * @param {Boolean} [options.less] - 是否使用less
    */
   construct: function (options) {
     this.conf = _.assign({
@@ -28,9 +27,6 @@ var Page = Base.extend({
     this.init();
   },
 
-  /**
-   * @description 初始化
-   */
   init: function () {
     this.gConfig = Util.getConfig();
     var userHome = Util.homedir();
@@ -58,13 +54,13 @@ var Page = Base.extend({
       prompts.push({
         type: 'input',
         name: 'pageName',
-        message: '请告诉我页面名字吧~',
+        message: '请输入页面名字！',
         validate: function(input) {
           if (!input) {
-            return '不能为空哦，会让人家很为难的~';
+            return '页面名字不能为空~';
           }
           if (fs.existsSync(this.destinationPath('page', input))) {
-            return '页面已经存在当前模块page目录中了，换个名字吧~';
+            return '页面已经存在当前模块page目录中了，换个名字~';
           }
           return true;
         }.bind(this)
@@ -153,8 +149,6 @@ var Page = Base.extend({
     var pageName = conf.pageName;
     var cssFileName = '';
     this.mkdir('page/' + pageName);
-    this.mkdir('page/' + pageName + '/images');
-    this.writeGitKeepFile('page/' + pageName + '/images');
     this.template(conf.tmpId , 'page' , 'page.html', 'page/' + pageName + '/' + pageName + '.html', this, {
       delimiter: '$'
     });
@@ -167,7 +161,6 @@ var Page = Base.extend({
     }
     this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.css', cssFileName);
     this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.js', 'page/' + pageName + '/' + pageName + '.js');
-    this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.json', 'page/' + pageName + '/' + pageName + '.json');
 
     this.fs.commit(function () {
       if (typeof cb === 'function') {
