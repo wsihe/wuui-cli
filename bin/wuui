@@ -30,10 +30,31 @@ program
     require(res('list'))
   })
 
+// Command: wuui module [moduleName]
+program
+  .command('module [moduleName]')
+  .alias('m')
+  .description('创建新的模块')
+  .option('--name [appName]', '模块名称')
+  .option('--description [moduleDescription]', '模块描述')
+  .option('--sass', '启用sass')
+  .option('--less', '启用less')
+  .option('--debug', '打印调试信息')
+  .action(function(moduleName, option) {
+
+
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log('');
+    console.log('    $ wuui module name');
+    console.log('    $ wuui m name');
+    console.log()
+  })
+
 // Command: wuui page [pageName]
 program
   .command('page [pageName]')
-  .alias('pa')
+  .alias('p')
   .description('创建新的页面')
   .option('--name [pageName]', '页面名称')
   .option('--description [pageDescription]', '页面描述')
@@ -48,6 +69,12 @@ program
     page.create(function () {
 
     })
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log('');
+    console.log('    $ wuui page name');
+    console.log('    $ wuui p name');
+    console.log()
   })
 
 
