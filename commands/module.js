@@ -1,21 +1,19 @@
 /**
-* @fileoverview 创建module类
+* @desc 创建module类
 * @author  river
 */
 
-'use strict';
+const _ = require('lodash')
+const fs = require('fs')
+const path = require('path')
+const chalk = require('chalk')
+const inquirer = require('inquirer')
+const uuid = require('uuid')
 
-var _ = require('lodash')
-var fs = require('fs')
-var path = require('path')
-var chalk = require('chalk')
-var inquirer = require('inquirer')
-var uuid = require('uuid')
+const Base = require('./base/base')
+const Util = require('../libs/index')
 
-var Base = require('./base/base')
-var Util = require('../libs/index')
-
-var MModule = Base.extend({
+let MModule = Base.extend({
   /**
    * @constructor
    * @param {Object} options
@@ -31,6 +29,7 @@ var MModule = Base.extend({
   },
 
   init: function () {
+    var userHome = Util.homedir();
     this.userName = process.env.USER || path.basename(userHome);
     console.log(chalk.magenta(this.userName + '开始创建模块!'));
   },

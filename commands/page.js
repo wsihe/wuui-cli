@@ -1,44 +1,41 @@
-var _ = require('lodash')
-var fs = require('fs')
-var path = require('path')
-var chalk = require('chalk')
-var inquirer = require('inquirer')
-var Base = require('./base/base')
-var Util = require('../libs/index')
+/**
+ * @desc 创建page类
+ * @author  river
+ */
 
-var Page = Base.extend({
+const _ = require('lodash')
+const fs = require('fs')
+const path = require('path')
+const chalk = require('chalk')
+const inquirer = require('inquirer')
+const Base = require('./base/base')
+const Util = require('../libs/index')
+
+let Page = Base.extend({
   /**
    * @constructor
    * @param {Object} options
    * @param {String} [options.pageName] - 页面名称
-   * @param {String} [options.description] - 页面描述
    * @param {Boolean} [options.sass] - 是否使用sass
    */
   construct: function (options) {
     this.conf = _.assign({
-      pageName: null,
-      description: null
+      pageName: null
     }, options);
     this.super.apply(this, arguments);
     this.init();
   },
 
   init: function () {
-    this.gConfig = Util.getConfig();
     var userHome = Util.homedir();
-    if (this.gConfig.user_name) {
-      this.userName = this.gConfig.user_name;
-    } else {
-      this.needSetUsername = true;
-      this.userName = process.env.USER || path.basename(userHome);
-    }
-    this.appConfPath = this.destinationPath('..', 'app-conf.js');
-    console.log(chalk.magenta(this.userName + '开始创建页面！'));
+    this.userName = process.env.USER || path.basename(userHome)
+    this.appConfPath = this.destinationPath('..', 'app-conf.js')
+    console.log(chalk.magenta(this.userName + '开始创建页面！'))
   },
 
   /**
-   * @description 输出询问信息
-   * @param {Function} cb - 输入完后的回调
+   * @desc 输出询问信息
+   * @param {Function} cb - 回调
    */
   talk: function (cb) {
     var prompts = [];
@@ -86,14 +83,6 @@ var Page = Base.extend({
       });
     }
 
-    if (typeof conf.description !== 'string') {
-      prompts.push({
-        type: 'input',
-        name: 'description',
-        message: '这个页面是用来干嘛的呢？'
-      });
-    }
-
     if (conf.sass === undefined && conf.less === undefined) {
       prompts.push({
         type: 'list',
@@ -109,13 +98,9 @@ var Page = Base.extend({
       });
     }
 
-    inquirer.prompt(prompts, function(answers) {
+    inquirer.prompt(prompts).then((answers) => {
       if (!answers.author) {
         answers.author = this.userName;
-      }
-      this.gConfig.user_name = answers.author;
-      if (this.needSetUsername) {
-        Util.setConfig(this.gConfig);
       }
       if (conf.sass) {
         answers.cssPretreatment = 'sass';
@@ -128,12 +113,12 @@ var Page = Base.extend({
       this.conf.commonModule = this.moduleConf.common;
       this.conf.secondaryDomain = 's';
       this.write(cb);
-    }.bind(this));
+    })
   },
 
   /**
-   * @description 创建目录，拷贝模板
-   * @param {Function} cb - 创建完后的回调
+   * @desc 创建目录，拷贝模板
+   * @param {Function} cb - 回调
    */
   write: function (cb) {
     // 创建目录
@@ -173,8 +158,8 @@ var Page = Base.extend({
   },
 
   /**
-   * @description 创建项目
-   * @param {Function} cb - 创建完后的回调
+   * @desc 创建项目
+   * @param {Function} cb - 回调
    */
   create: function (cb) {
     var that = this;

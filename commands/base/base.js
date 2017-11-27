@@ -1,27 +1,24 @@
 /**
- * @fileoverview 创建的基类
+ * @desc 创建的基类
  * @author  river
  */
+const mkdirp = require('mkdirp');
+const memFs = require('mem-fs');
+const FileEditor = require('mem-fs-editor');
+const path = require('path');
+const fs = require('fs');
+const del = require('del');
+const pathIsAbsolute = require('path-is-absolute');
+const pathExists = require('path-exists');
+const request = require('request');
+const unzip = require('unzip');
+const crypto = require('crypto');
+const chalk = require('chalk');
+const _ = require('lodash')
 
-'use strict';
-
-var mkdirp = require('mkdirp');
-var memFs = require('mem-fs');
-var FileEditor = require('mem-fs-editor');
-var path = require('path');
-var fs = require('fs');
-var del = require('del');
-var pathIsAbsolute = require('path-is-absolute');
-var pathExists = require('path-exists');
-var request = require('request');
-var unzip = require('unzip');
-var crypto = require('crypto');
-var chalk = require('chalk');
-var _ = require('lodash')
-
-var wrench = require('../../libs/wrench');
-var Class = require('./class');
-var Util = require('../../libs/index');
+const wrench = require('../../libs/wrench');
+const Class = require('./class');
+const Util = require('../../libs/index');
 
 var setting = Util.getSetting();
 
@@ -83,7 +80,7 @@ function md5File (filename, callback) {
  * @class Base
  * @classdesc Base类
  */
-var Base = Class.extend({
+let Base = Class.extend({
 
   construct: function () {
     this.sharedFs = memFs.create();
@@ -96,14 +93,14 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 创建目录
+   * @desc 创建目录
    */
   mkdir: function () {
     mkdirp.sync.apply(mkdirp, arguments);
   },
 
   /**
-   * @description 向目录下写入git占位文件
+   * @desc 向目录下写入git占位文件
    * @param {String} dirname 目录相对路径
    */
   writeGitKeepFile: function (dirname) {
@@ -112,7 +109,7 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 资源根路径
+   * @desc 资源根路径
    * @param {String} rootPath 资源根目录
    * @return {String} 资源根路径
    */
@@ -127,7 +124,7 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 获取模板路径
+   * @desc 获取模板路径
    * @return {String} 模板路径
    */
   templatePath: function () {
@@ -157,7 +154,7 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 获取生成代码的目标路径
+   * @desc 获取生成代码的目标路径
    * @return {String} 路径
    */
   destinationPath: function () {
@@ -170,7 +167,7 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 渲染模板
+   * @desc 渲染模板
    * @param {String} tmpId 模板ID
    * @param {String} type 创建类型，如app
    * @param {String} source 模板文件名
@@ -195,7 +192,7 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 拷贝并渲染模板
+   * @desc 拷贝并渲染模板
    * @param {Object} tpl {tmpName, tmpId}
    * @param {String} type 创建类型，如app
    * @param {String} source 模板文件名
@@ -216,7 +213,7 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 获取远程配置
+   * @desc 获取远程配置
    * @param {function} cbk
    * @return {Object} this
    */
@@ -279,7 +276,7 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 设置使用默认模板
+   * @desc设置使用默认模板
    */
   setDefaultTmp: function () {
     var tmpPath = path.join(Util.getAthenaPath(), 'tmp', 'templates');
@@ -289,7 +286,7 @@ var Base = Class.extend({
   },
 
   /**
-   * @description 通过模板名称获取模板ID
+   * @desc 通过模板名称获取模板ID
    * @param {string} tmpName
    */
   getTmpIdByTmpName: function(tmpName) {
