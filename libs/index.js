@@ -355,7 +355,7 @@ var Util = {
   },
 
   /**
-   * 写入athena配置
+   * 写入11 配置
    */
   setConfig: function (config) {
     var athenaPath = this.getAthenaPath();

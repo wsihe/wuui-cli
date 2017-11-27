@@ -1,15 +1,11 @@
-var _ = require('lodash');
-var fs = require('fs');
-var path = require('path');
-var chalk = require('chalk');
-var inquirer = require('inquirer');
-var Base = require('./base/base');
-var Util = require('../libs/index');
+var _ = require('lodash')
+var fs = require('fs')
+var path = require('path')
+var chalk = require('chalk')
+var inquirer = require('inquirer')
+var Base = require('./base/base')
+var Util = require('../libs/index')
 
-/**
- * @class Page
- * @classdesc Page类
- */
 var Page = Base.extend({
   /**
    * @constructor

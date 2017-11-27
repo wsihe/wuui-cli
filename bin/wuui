@@ -3,7 +3,8 @@
 process.env.NODE_PATH = __dirname + '/../node_modules/'
 const { resolve } = require('path')
 const res = command => resolve(__dirname, '../commands/', command)
-const Page = require('../commands/page');
+const MModule = require('../commands/module')
+const Page = require('../commands/page')
 const program = require('commander')
 
 program
@@ -35,21 +36,30 @@ program
   .command('module [moduleName]')
   .alias('m')
   .description('创建新的模块')
-  .option('--name [appName]', '模块名称')
+  .option('--name [moduleName]', '模块名称')
   .option('--description [moduleDescription]', '模块描述')
-  .option('--sass', '启用sass')
-  .option('--less', '启用less')
-  .option('--debug', '打印调试信息')
   .action(function(moduleName, option) {
-
-
+    createModule(moduleName, option)
   }).on('--help', function() {
-    console.log('  Examples:');
-    console.log('');
-    console.log('    $ wuui module name');
-    console.log('    $ wuui m name');
+    console.log('  Examples:')
+    console.log('')
+    console.log('    $ wuui module name')
+    console.log('    $ wuui m name')
     console.log()
   })
+
+// 创建模块
+function createModule (moduleName, option) {
+  return new Promise(function (resolve, reject) {
+    let mmodule = new MModule({
+      moduleName: moduleName || option.name,
+      moduleDescription: option.description,
+    })
+    mmodule.create(function () {
+
+    })
+  })
+}
 
 // Command: wuui page [pageName]
 program
