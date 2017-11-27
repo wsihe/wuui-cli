@@ -5,6 +5,7 @@
 
 const _ = require('lodash')
 const fs = require('fs')
+const exists = require('fs').existsSync
 const path = require('path')
 const chalk = require('chalk')
 const inquirer = require('inquirer')
@@ -39,10 +40,8 @@ let Page = Base.extend({
    */
   talk: function (cb) {
     var prompts = [];
-    var userHome = Util.homedir();
-    var userName = path.basename(userHome);
     var conf = this.conf;
-    this.moduleConf = require(this.destinationPath('module-conf'));
+    // this.moduleConf = require(this.destinationPath('module-conf'));
     if (typeof conf.pageName !== 'string') {
       prompts.push({
         type: 'input',
@@ -52,13 +51,13 @@ let Page = Base.extend({
           if (!input) {
             return '页面名字不能为空~';
           }
-          if (fs.existsSync(this.destinationPath('page', input))) {
+          if (exists(this.destinationPath('page', input))) {
             return '页面已经存在当前模块page目录中了，换个名字~';
           }
           return true;
         }.bind(this)
       });
-    } else if (fs.existsSync(this.destinationPath('page', conf.pageName))) {
+    } else if (exists(this.destinationPath('page', conf.pageName))) {
       prompts.push({
         type: 'input',
         name: 'pageName',
@@ -67,19 +66,11 @@ let Page = Base.extend({
           if (!input) {
             return '不能为空哦，会让人家很为难的~';
           }
-          if (fs.existsSync(this.destinationPath('page', input))) {
+          if (exists(this.destinationPath('page', input))) {
             return '页面已经存在当前模块page目录中了，换个名字吧~';
           }
           return true;
         }.bind(this)
-      });
-    }
-
-    if (!this.userName) {
-      prompts.push({
-        type: 'input',
-        name: 'author',
-        message: '雁过留声，人过留名~~'
       });
     }
 
@@ -99,18 +90,14 @@ let Page = Base.extend({
     }
 
     inquirer.prompt(prompts).then((answers) => {
-      if (!answers.author) {
-        answers.author = this.userName;
-      }
+      answers.author = this.userName
       if (conf.sass) {
-        answers.cssPretreatment = 'sass';
+        answers.cssPretreatment = 'sass'
       }
-      _.assign(this.conf, answers);
+      _.assign(this.conf, answers)
       this.conf.date = ((new Date()).getFullYear()) + '-' + ((new Date()).getMonth() + 1) + '-' + ((new Date()).getDate());
-      this.conf.modName = this.moduleConf.module;
-      this.conf.modClassName = Util.classify(this.conf.modName);
-      this.conf.appName = this.moduleConf.app;
-      this.conf.commonModule = this.moduleConf.common;
+      // this.conf.modName = this.moduleConf.module;
+      // this.conf.modClassName = Util.classify(this.conf.modName);
       this.conf.secondaryDomain = 's';
       this.write(cb);
     })
@@ -123,22 +110,25 @@ let Page = Base.extend({
   write: function (cb) {
     // 创建目录
     var conf = this.conf;
-    var appConf = require(this.appConfPath);
-    var conf = this.conf;
-    conf.tmpName = appConf.tmpName || undefined;
-    conf.tmpId = appConf.tmpId ? appConf.tmpId : this.getTmpIdByTmpName(conf.tmpName);
-    var pageName = conf.pageName;
-    var cssFileName = '';
+
+    // var appConf = require(this.appConfPath);
+    // var conf = this.conf;
+    // conf.tmpName = appConf.tmpName || undefined;
+    // conf.tmpId = appConf.tmpId ? appConf.tmpId : this.getTmpIdByTmpName(conf.tmpName)
+    //
+
+    var conf = this.conf
+    conf.tmpName = undefined
+    conf.tmpId = this.getTmpIdByTmpName(conf.tmpName)
+
+    var pageName = conf.pageName
+    var cssFileName = ''
     this.mkdir('page/' + pageName);
     this.template(conf.tmpId , 'page' , 'page.html', 'page/' + pageName + '/' + pageName + '.html', this, {
       delimiter: '$'
     });
     if (conf.cssPretreatment === 'sass') {
       cssFileName = 'page/' + pageName + '/' + pageName + '.scss';
-    } else if (conf.cssPretreatment === 'less') {
-      cssFileName = 'page/' + pageName + '/' + pageName + '.less';
-    } else {
-      cssFileName = 'page/' + pageName + '/' + pageName + '.css';
     }
     this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.css', cssFileName);
     this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.js', 'page/' + pageName + '/' + pageName + '.js');
@@ -150,7 +140,6 @@ let Page = Base.extend({
       console.log(chalk.green('    创建文件:' + 'page/' + pageName + '/' + pageName + '.html'));
       console.log(chalk.green('    创建文件:' + cssFileName));
       console.log(chalk.green('    创建文件:' + 'page/' + pageName + '/' + pageName + '.js'));
-      console.log(chalk.green('    创建文件:' + 'page/' + pageName + '/' + pageName + '.json'));
       console.log();
       console.log('    ' + chalk.bgGreen('页面' + pageName + '创建成功！'));
       console.log();

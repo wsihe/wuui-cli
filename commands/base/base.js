@@ -219,7 +219,7 @@ let Base = Class.extend({
    */
   getRemoteConf: function (cbk) {
     var that = this;
-    var cache = readCache(path.join(that.sourceRoot(), '_cache.json'));
+    var cache = readCache(path.join(that.sourceRoot(), 'z_cache.json'));
     request.get(setting.report_url + '/api/templates', function(err, res, body) {
       if (!err && res.statusCode === 200) {
         var body = JSON.parse(body);

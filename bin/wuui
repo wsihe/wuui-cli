@@ -37,7 +37,6 @@ program
   .alias('m')
   .description('创建新的模块')
   .option('--name [moduleName]', '模块名称')
-  .option('--description [moduleDescription]', '模块描述')
   .action(function(moduleName, option) {
     createModule(moduleName, option)
   }).on('--help', function() {
@@ -67,12 +66,10 @@ program
   .alias('p')
   .description('创建新的页面')
   .option('--name [pageName]', '页面名称')
-  .option('--description [pageDescription]', '页面描述')
   .option('--sass', '启用sass')
   .action(function(pageName, option) {
     let page = new Page({
       pageName: pageName || option.name,
-      description: option.description,
       sass: option.sass
     })
     // 创建页面

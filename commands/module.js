@@ -63,7 +63,7 @@ let MModule = Base.extend({
         message: '模块已经存在，会在该模块下直接创建页面~',
         validate: function(input) {
           if (!input) {
-            return '不能为空哦，会让人家很为难的~';
+            return '不模块的名字不能为空！';
           }
           if (fs.existsSync(this.destinationPath(input))) {
             return '模块已经存在哦，换个名字吧~';
@@ -74,11 +74,9 @@ let MModule = Base.extend({
     }
 
     inquirer.prompt(prompts).then((answers) => {
-      if (!answers.author) {
-        answers.author = this.userName;
-      }
-      _.assign(this.conf, answers);
-      this.write(cb);
+      answers.author = this.userName
+      _.assign(this.conf, answers)
+      this.write(cb)
     })
   },
 
@@ -87,18 +85,18 @@ let MModule = Base.extend({
    * @param {Function} cb - 回调
    */
   write: function (cb) {
-    var conf = this.conf;
-    conf.moduleId = uuid.v1();
-    this.mkdir(conf.moduleName);
+    var conf = this.conf
+    conf.moduleId = uuid.v1()
+    this.mkdir(conf.moduleName)
 
     this.fs.commit(function () {
       if (typeof cb === 'function') {
-        cb(conf.moduleName);
+        cb(conf.moduleName)
       }
       console.log()
-      console.log('    ' + chalk.bgGreen('模块' + conf.moduleName + '创建成功！'));
+      console.log('    ' + chalk.bgGreen('模块' + conf.moduleName + '创建成功！'))
       console.log()
-      console.log(chalk.yellow('    请执行 cd ' + conf.moduleName + ' 进入到模块下开始工作吧！'));
+      console.log(chalk.yellow('    请执行 cd ' + conf.moduleName + ' 进入到模块下开始工作吧！'))
       console.log()
     }.bind(this))
   },
@@ -108,8 +106,7 @@ let MModule = Base.extend({
    * @param {Function} cb - 创建完后的回调
    */
   create: function (cb) {
-    var that = this;
-    that.talk(cb);
+    this.talk(cb);
   }
 });
 
