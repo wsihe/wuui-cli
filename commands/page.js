@@ -17,7 +17,7 @@ let Page = Base.extend({
    * @constructor
    * @param {Object} options
    * @param {String} [options.pageName] - 页面名称
-   * @param {Boolean} [options.sass] - 是否使用sass
+   * @param {Boolean} [options.styl] - 是否使用styl
    */
   construct: function (options) {
     this.conf = _.assign({
@@ -30,7 +30,6 @@ let Page = Base.extend({
   init: function () {
     var userHome = Util.homedir();
     this.userName = process.env.USER || path.basename(userHome)
-    this.appConfPath = this.destinationPath('..', 'app-conf.js')
     console.log(chalk.magenta(this.userName + '开始创建页面！'))
   },
 
@@ -41,7 +40,22 @@ let Page = Base.extend({
   talk: function (cb) {
     var prompts = [];
     var conf = this.conf;
-    // this.moduleConf = require(this.destinationPath('module-conf'));
+    this.pageFileUrl = 'src/app/pages'
+    prompts.push({
+      type: 'input',
+      name: 'moduleName',
+      message: '是否保存在模块下，模块名字~',
+      validate: function(input) {
+        if (!input) {
+          return '模块名字为空，在pages目录下生成文件~';
+        }
+        if (exists(this.destinationPath('page', input))) {
+          return `在pages/${input}目录下生成文件~`
+        }
+        return true;
+      }.bind(this)
+    })
+
     if (typeof conf.pageName !== 'string') {
       prompts.push({
         type: 'input',
@@ -49,10 +63,10 @@ let Page = Base.extend({
         message: '请输入页面名字！',
         validate: function(input) {
           if (!input) {
-            return '页面名字不能为空~';
+            return '页面名字不能为空~'
           }
           if (exists(this.destinationPath('page', input))) {
-            return '页面已经存在当前模块目录中了，换个名字~';
+            return '页面已经存在当前模块目录中了，换个名字~'
           }
           return true;
         }.bind(this)
@@ -67,7 +81,7 @@ let Page = Base.extend({
             return '页面名字不能为空~';
           }
           if (exists(this.destinationPath('page', input))) {
-            return '页面已经存在当前模块目录中了，换个名字~';
+            return '页面已经存在当前模块目录中了，换个名字~'
           }
           return true;
         }.bind(this)
@@ -95,7 +109,8 @@ let Page = Base.extend({
         answers.cssPretreatment = 'styl'
       }
       _.assign(this.conf, answers)
-      this.conf.date = ((new Date()).getFullYear()) + '-' + ((new Date()).getMonth() + 1) + '-' + ((new Date()).getDate())
+      let date = new Date()
+      this.conf.date = (`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`)
       this.conf.secondaryDomain = 's'
       this.write(cb)
     })
@@ -113,28 +128,34 @@ let Page = Base.extend({
 
     var pageName = conf.pageName
     var cssFileName = ''
-    var moduleName = 'module/'
-    var pageUrl = `page/${moduleName}${pageName}/${pageName}`
-    this.mkdir(`page/${moduleName}${pageName}`)
+    var pageFileUrl = this.pageFileUrl
+    var moduleName = conf.moduleName
+    if (moduleName) {
+      pageFileUrl = `${pageFileUrl}/${moduleName}`
+    }
+    var pageUrl = `${pageFileUrl}/${pageName}/${pageName}`
+
+    this.mkdir(`${pageFileUrl}/${pageName}`)
     this.template(conf.tmpId , 'page' , 'page.html', `${pageUrl}.html`, this, {
       delimiter: '$'
-    });
+    })
     if (conf.cssPretreatment === 'styl') {
       cssFileName = `${pageUrl}.styl`
+      this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.css', `${pageUrl}.styl`)
     }
-    this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.css', cssFileName);
-    this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.js', `${pageUrl}.js`);
+    this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.js', `${pageUrl}.js`)
 
     this.fs.commit(function () {
       if (typeof cb === 'function') {
         cb(pageName)
       }
-      console.log(chalk.green('    创建文件:' + 'page/' + pageName + '/' + pageName + '.html'));
-      console.log(chalk.green('    创建文件:' + cssFileName));
-      console.log(chalk.green('    创建文件:' + 'page/' + pageName + '/' + pageName + '.js'));
-      console.log();
-      console.log('    ' + chalk.bgGreen('页面' + pageName + '创建成功！'));
-      console.log();
+      console.log()
+      console.log(chalk.green(`    创建文件: ${pageUrl}.html`))
+      console.log(chalk.green(`    创建文件: ${cssFileName}`))
+      console.log(chalk.green(`    创建文件: ${pageUrl}.js`))
+      console.log()
+      console.log('    ' + chalk.bgGreen(`页面${pageName}创建成功！`))
+      console.log()
     }.bind(this))
   },
 
@@ -150,4 +171,4 @@ let Page = Base.extend({
   }
 });
 
-module.exports = Page;
+module.exports = Page
