@@ -6,8 +6,9 @@
 ## 添加 page 页面
 
 ```
-wuui page [moduleName] [pageName]
+wuui module [moduleName] page [pageName]
 
+wuui m [moduleName] p [pageName]
 ```
 
     ├── page                    - 所有页面总目录
