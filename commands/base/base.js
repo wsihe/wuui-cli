@@ -213,66 +213,27 @@ let Base = Class.extend({
   },
 
   /**
-   * @desc 获取远程配置
+   * @desc 获取本地页面配置
+   * @param {function} cbk
+   * @return {Object} this
+   */
+  getLocalConf: function (cbk) {
+    var that = this;
+    var cache = readCache(path.join(that.sourceRoot(), '_cache.json'))
+    that.setDefaultTmp();
+    cbk(cache);
+  },
+
+  /**
+   * @desc 获取远程页面配置
    * @param {function} cbk
    * @return {Object} this
    */
   getRemoteConf: function (cbk) {
     var that = this;
-    var cache = readCache(path.join(that.sourceRoot(), 'z_cache.json'));
-    request.get(setting.report_url + '/api/templates', function(err, res, body) {
-      if (!err && res.statusCode === 200) {
-        var body = JSON.parse(body);
-        var templatesVersion = body.data.version;
-        if (templatesVersion === cache.version) {
-          cbk(cache);
-        } else {
-          var _tmppath = path.join(that.sourceRoot(), 'templates.zip');
-          try {
-            console.log(chalk.green('  正在下载最新的模板，请稍等...'));
-            request(setting.report_url + '/api/template/download')
-            .pipe(fs.createWriteStream(_tmppath))
-            .on('finish',function(){
-              md5File(_tmppath, function(err, sum) {
-                if (err || sum !== body.data.version) {
-                  cbk(cache);
-                  console.log('警告：验证zip包出错,请检查异常！');
-                } else {
-                  cache = body.data;
-
-                  var templatesPath = path.join(that.sourceRoot(), 'templates');
-                  var templatesTmpPath = path.join(that.sourceRoot(), 'templates_tmp');
-                  var zip = unzip.Extract({ path: templatesTmpPath });
-                  zip.on('close', function () {
-                    Util.rmfolder(templatesPath, true);
-                    wrench.copyDirSyncRecursive(templatesTmpPath, templatesPath, {
-                      forceDelete: true
-                    });
-                    Util.rmfolder(path.join(that.sourceRoot(),'templates_tmp') , true);
-                    writeCache(cache , path.join(that.sourceRoot(), '_cache.json'));
-                    del.sync(_tmppath, { force: true });
-                    cbk(cache);
-                  })
-                  .on('error', function (err) {
-                    console.log(err);
-                    cbk(cache);
-                  });
-                  fs.createReadStream(_tmppath)
-                  .pipe(zip);
-                }
-              });
-            });
-          } catch(e) {
-            that.setDefaultTmp();
-            cbk(cache);
-          }
-        }
-      } else {
-        that.setDefaultTmp();
-        console.log('警告：未能从服务端同步到最新的模板信息，请检查异常！');
-        cbk(cache);
-      }
-    });
+    var cache = readCache(path.join(that.sourceRoot(), '_cache.json'))
+    that.setDefaultTmp();
+    cbk(cache);
   },
 
   /**

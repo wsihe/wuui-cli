@@ -203,33 +203,6 @@ var Util = {
   },
 
   /**
-   * 获取文件名对应的md5，server模式
-   */
-  getHashNameServer: function (id, mapJson) {
-    var ext = path.extname(id);
-    var rev = mapJson.rev;
-    var revByType = null;
-    if (!rev) {
-      return id;
-    }
-    if (Util.regexps.js.test(ext)) {
-      revByType = rev.js;
-    } else if (Util.regexps.css.test(ext)) {
-      revByType = rev.css;
-    } else if (Util.regexps.media.test(ext)) {
-      revByType = rev.img;
-    }
-    var splitAfter = '';
-    var idParse = this.getUrlParseSplit(id);
-    id = idParse.pathname;
-    splitAfter = idParse.split;
-    if (!revByType || !revByType[id]) {
-      return id;
-    }
-    return revByType[id] + splitAfter;
-  },
-
-  /**
    * 获取静态资源路径信息
    */
   getStaticPath: function (fpath) {
@@ -256,51 +229,6 @@ var Util = {
   },
 
   /**
-   * 获取静态资源路径信息server模式
-   */
-  getStaticPathServer: function (fpath, excludePath) {
-    var innerPath = fpath.replace(excludePath, '');
-    var dirname = path.dirname(innerPath);
-    var dirnameArr = [];
-    var splitFlag = '';
-    if (dirname.indexOf('\/') >= 0) {
-      splitFlag = '\/';
-    } else {
-      splitFlag = '\\';
-    }
-    dirnameArr = dirname.split(splitFlag);
-    var staticIndex = dirnameArr.indexOf('s');
-    if (staticIndex >= 0) {
-      fpath = innerPath.split(splitFlag).splice(staticIndex + 1).join(splitFlag);
-    }
-    return {
-      index: staticIndex,
-      path: fpath
-    };
-  },
-
-  stringQuote: function (str, quotes) {
-    var info = {
-      origin: str,
-      rest: str = str.trim(),
-      quote: ''
-    };
-    if (str) {
-      quotes = quotes || '\'"';
-      var strLen = str.length - 1;
-      for (var i = 0, len = quotes.length; i < len; i++) {
-        var c = quotes[i];
-        if (str[0] === c && str[strLen] === c) {
-          info.quote = c;
-          info.rest = str.substring(1, strLen);
-          break;
-        }
-      }
-    }
-    return info;
-  },
-
-  /**
    * 通过文件路径，获取模块信息
    */
   getModuleInfoViaPath: function (fPath, appPath) {
@@ -319,14 +247,14 @@ var Util = {
   },
 
   /**
-   * 获取athena根目录
+   * 获取根目录
    */
   getRootPath: function () {
     return path.resolve(__dirname, '../../');
   },
 
   /**
-   * 获取athena package.json
+   * 获取package.json
    */
   getPkgInfo: function () {
     var info = {};
@@ -339,7 +267,7 @@ var Util = {
   },
 
   /**
-   * 获取athena配置
+   * 获取配置
    */
   getConfig: function () {
     var configPath = path.join(this.getAthenaPath(), 'config.json');
@@ -353,7 +281,6 @@ var Util = {
     }
     return config;
   },
-
   /**
    * 写入11 配置
    */

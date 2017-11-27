@@ -22,9 +22,9 @@ let Page = Base.extend({
   construct: function (options) {
     this.conf = _.assign({
       pageName: null
-    }, options);
-    this.super.apply(this, arguments);
-    this.init();
+    }, options)
+    this.super.apply(this, arguments)
+    this.init()
   },
 
   init: function () {
@@ -52,54 +52,52 @@ let Page = Base.extend({
             return '页面名字不能为空~';
           }
           if (exists(this.destinationPath('page', input))) {
-            return '页面已经存在当前模块page目录中了，换个名字~';
+            return '页面已经存在当前模块目录中了，换个名字~';
           }
           return true;
         }.bind(this)
-      });
+      })
     } else if (exists(this.destinationPath('page', conf.pageName))) {
       prompts.push({
         type: 'input',
         name: 'pageName',
-        message: '页面已经存在当前模块page目录中了，换个名字吧~',
+        message: '页面已经存在当前模块目录中了，换个名字~',
         validate: function(input) {
           if (!input) {
-            return '不能为空哦，会让人家很为难的~';
+            return '页面名字不能为空~';
           }
           if (exists(this.destinationPath('page', input))) {
-            return '页面已经存在当前模块page目录中了，换个名字吧~';
+            return '页面已经存在当前模块目录中了，换个名字~';
           }
           return true;
         }.bind(this)
-      });
+      })
     }
 
     if (conf.sass === undefined && conf.less === undefined) {
       prompts.push({
         type: 'list',
         name: 'cssPretreatment',
-        message: '想使用什么css预处理器呢？',
+        message: '是否添加css文件:',
         choices: [{
-          name: 'Sass/Compass',
-          value: 'sass'
+          name: 'Styl',
+          value: 'styl'
         },{
           name: '不需要',
           value: 'none'
         }]
-      });
+      })
     }
 
     inquirer.prompt(prompts).then((answers) => {
       answers.author = this.userName
-      if (conf.sass) {
-        answers.cssPretreatment = 'sass'
+      if (conf.styl) {
+        answers.cssPretreatment = 'styl'
       }
       _.assign(this.conf, answers)
-      this.conf.date = ((new Date()).getFullYear()) + '-' + ((new Date()).getMonth() + 1) + '-' + ((new Date()).getDate());
-      // this.conf.modName = this.moduleConf.module;
-      // this.conf.modClassName = Util.classify(this.conf.modName);
-      this.conf.secondaryDomain = 's';
-      this.write(cb);
+      this.conf.date = ((new Date()).getFullYear()) + '-' + ((new Date()).getMonth() + 1) + '-' + ((new Date()).getDate())
+      this.conf.secondaryDomain = 's'
+      this.write(cb)
     })
   },
 
@@ -108,14 +106,6 @@ let Page = Base.extend({
    * @param {Function} cb - 回调
    */
   write: function (cb) {
-    // 创建目录
-    var conf = this.conf;
-
-    // var appConf = require(this.appConfPath);
-    // var conf = this.conf;
-    // conf.tmpName = appConf.tmpName || undefined;
-    // conf.tmpId = appConf.tmpId ? appConf.tmpId : this.getTmpIdByTmpName(conf.tmpName)
-    //
 
     var conf = this.conf
     conf.tmpName = undefined
@@ -123,19 +113,21 @@ let Page = Base.extend({
 
     var pageName = conf.pageName
     var cssFileName = ''
-    this.mkdir('page/' + pageName);
-    this.template(conf.tmpId , 'page' , 'page.html', 'page/' + pageName + '/' + pageName + '.html', this, {
+    var moduleName = 'module/'
+    var pageUrl = `page/${moduleName}${pageName}/${pageName}`
+    this.mkdir(`page/${moduleName}${pageName}`)
+    this.template(conf.tmpId , 'page' , 'page.html', `${pageUrl}.html`, this, {
       delimiter: '$'
     });
-    if (conf.cssPretreatment === 'sass') {
-      cssFileName = 'page/' + pageName + '/' + pageName + '.scss';
+    if (conf.cssPretreatment === 'styl') {
+      cssFileName = `${pageUrl}.styl`
     }
     this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.css', cssFileName);
-    this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.js', 'page/' + pageName + '/' + pageName + '.js');
+    this.copy({tmpName:conf.tmpName, tmpId:conf.tmpId}, 'page' , 'page.js', `${pageUrl}.js`);
 
     this.fs.commit(function () {
       if (typeof cb === 'function') {
-        cb(pageName);
+        cb(pageName)
       }
       console.log(chalk.green('    创建文件:' + 'page/' + pageName + '/' + pageName + '.html'));
       console.log(chalk.green('    创建文件:' + cssFileName));
@@ -143,7 +135,7 @@ let Page = Base.extend({
       console.log();
       console.log('    ' + chalk.bgGreen('页面' + pageName + '创建成功！'));
       console.log();
-    }.bind(this));
+    }.bind(this))
   },
 
   /**
@@ -151,10 +143,10 @@ let Page = Base.extend({
    * @param {Function} cb - 回调
    */
   create: function (cb) {
-    var that = this;
-    this.getRemoteConf(function(){
-      that.talk(cb);
-    });
+    var that = this
+    this.getLocalConf(function(){
+      that.talk(cb)
+    })
   }
 });
 
