@@ -66,8 +66,8 @@ program
   .command('page [pageName]')
   .alias('p')
   .description('创建新的页面')
-  .option('--path [moduleName]', '模块名称')
   .option('--name [pageName]', '页面名称')
+  .option('--path [moduleName]', '模块名称')
   .option('--styl', '启用stylus')
   .action(function(pageName, option) {
     let page = new Page({

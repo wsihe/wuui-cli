@@ -50,6 +50,8 @@ let Page = Base.extend({
         name: 'moduleName',
         message: '在指定模块或路径下新建，模块或路径：'
       })
+    }else {
+      _this.pageFileUrl = `${_this.pageFileUrl}/${conf.moduleName}`
     }
     inquirer.prompt(prompt).then((answers) => {
       var questions = [];
