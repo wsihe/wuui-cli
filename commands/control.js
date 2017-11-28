@@ -47,29 +47,29 @@ let Control = Base.extend({
       questions.push({
         type: 'input',
         name: 'controlName',
-        message: '请输入页面名字:',
+        message: '请输入控件名字:',
         validate: function(input) {
           if (!input) {
-            return '页面名字不能为空~'
+            return '控件名字不能为空~'
           }
 
-          if (exists(_this.destinationPath(_this.pageFileUrl, input))) {
-            return `页面已存在${this.pageFileUrl}目录中了，换个名字~`
+          if (exists(_this.destinationPath(_this.fileUrl, input))) {
+            return `控件已存在${this.fileUrl}目录中了，换个名字~`
           }
           return true;
         }
       })
-    } else if (exists(_this.destinationPath(_this.pageFileUrl, conf.controlName))) {
+    } else if (exists(_this.destinationPath(_this.fileUrl, conf.controlName))) {
       questions.push({
         type: 'input',
         name: 'controlName',
-        message: `页面已存在${_this.pageFileUrl}目录中了，换个名字:`,
+        message: `控件已存在${_this.fileUrl}目录中了，换个名字:`,
         validate: function(input) {
           if (!input) {
-            return '页面名字不能为空~';
+            return '控件名字不能为空~';
           }
-          if (exists(_this.destinationPath(_this.pageFileUrl, input))) {
-            return `页面已存在${_this.pageFileUrl}目录中了，换个名字~`
+          if (exists(_this.destinationPath(_this.fileUrl, input))) {
+            return `控件已存在${_this.fileUrl}目录中了，换个名字~`
           }
           return true
         }

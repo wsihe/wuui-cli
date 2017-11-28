@@ -89,7 +89,7 @@ program
 
 // Command: wuui control [controlName]
 program
-  .command('control [pageName]')
+  .command('control [controlName]')
   .alias('c')
   .description('创建新的控件')
   .option('--name [controlName]', '控件名称')
@@ -100,7 +100,9 @@ program
       styl: option.styl
     })
     // 创建页面
-    control.create()
+    control.create(function(){
+
+    })
   }).on('--help', function() {
     console.log('  Examples:');
     console.log('');
