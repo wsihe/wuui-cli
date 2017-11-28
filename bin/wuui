@@ -5,6 +5,7 @@ const { resolve } = require('path')
 const res = command => resolve(__dirname, '../commands/', command)
 const MModule = require('../commands/module')
 const Page = require('../commands/page')
+const Control = require('../commands/control')
 const program = require('commander')
 
 program
@@ -78,6 +79,28 @@ program
     page.create(function () {
 
     })
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log('');
+    console.log('    $ wuui page name');
+    console.log('    $ wuui p name');
+    console.log()
+  })
+
+// Command: wuui control [controlName]
+program
+  .command('control [pageName]')
+  .alias('c')
+  .description('创建新的控件')
+  .option('--name [controlName]', '控件名称')
+  .option('--styl', '启用stylus')
+  .action(function(controlName, option) {
+    let control = new Control({
+      controlName: controlName || option.name,
+      styl: option.styl
+    })
+    // 创建页面
+    control.create()
   }).on('--help', function() {
     console.log('  Examples:');
     console.log('');
