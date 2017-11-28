@@ -21,6 +21,7 @@ let Page = Base.extend({
    */
   construct: function (options) {
     this.conf = _.assign({
+      moduleName: null,
       pageName: null
     }, options)
     this.super.apply(this, arguments)
@@ -30,7 +31,6 @@ let Page = Base.extend({
   init: function () {
     var userHome = Util.homedir();
     this.userName = process.env.USER || path.basename(userHome)
-    console.log(chalk.magenta(this.userName + '开始创建页面！'))
   },
 
   /**
@@ -38,82 +38,85 @@ let Page = Base.extend({
    * @param {Function} cb - 回调
    */
   talk: function (cb) {
-    var prompts = [];
-    var conf = this.conf;
+
+    var prompt = []
+    var conf = this.conf
+    var _this = this
     this.pageFileUrl = 'src/app/pages'
-    prompts.push({
-      type: 'input',
-      name: 'moduleName',
-      message: '是否保存在模块下，模块名字~',
-      validate: function(input) {
-        if (!input) {
-          return '模块名字为空，在pages目录下生成文件~';
-        }
-        if (exists(this.destinationPath('page', input))) {
-          return `在pages/${input}目录下生成文件~`
-        }
-        return true;
-      }.bind(this)
-    })
 
-    if (typeof conf.pageName !== 'string') {
-      prompts.push({
+    if(typeof conf.moduleName !== 'string'){
+      prompt.push({
         type: 'input',
-        name: 'pageName',
-        message: '请输入页面名字！',
-        validate: function(input) {
-          if (!input) {
-            return '页面名字不能为空~'
-          }
-          if (exists(this.destinationPath('page', input))) {
-            return '页面已经存在当前模块目录中了，换个名字~'
-          }
-          return true;
-        }.bind(this)
-      })
-    } else if (exists(this.destinationPath('page', conf.pageName))) {
-      prompts.push({
-        type: 'input',
-        name: 'pageName',
-        message: '页面已经存在当前模块目录中了，换个名字~',
-        validate: function(input) {
-          if (!input) {
-            return '页面名字不能为空~';
-          }
-          if (exists(this.destinationPath('page', input))) {
-            return '页面已经存在当前模块目录中了，换个名字~'
-          }
-          return true;
-        }.bind(this)
+        name: 'moduleName',
+        message: '在指定模块或路径下新建，模块或路径：'
       })
     }
-
-    if (conf.sass === undefined && conf.less === undefined) {
-      prompts.push({
-        type: 'list',
-        name: 'cssPretreatment',
-        message: '是否添加css文件:',
-        choices: [{
-          name: 'Styl',
-          value: 'styl'
-        },{
-          name: '不需要',
-          value: 'none'
-        }]
-      })
-    }
-
-    inquirer.prompt(prompts).then((answers) => {
-      answers.author = this.userName
-      if (conf.styl) {
-        answers.cssPretreatment = 'styl'
+    inquirer.prompt(prompt).then((answers) => {
+      var questions = [];
+      if(answers.moduleName){
+        _this.pageFileUrl = `${_this.pageFileUrl}/${answers.moduleName}`
       }
-      _.assign(this.conf, answers)
-      let date = new Date()
-      this.conf.date = (`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`)
-      this.conf.secondaryDomain = 's'
-      this.write(cb)
+      if (typeof conf.pageName !== 'string') {
+        questions.push({
+          type: 'input',
+          name: 'pageName',
+          message: '请输入页面名字:',
+          validate: function(input) {
+            if (!input) {
+              return '页面名字不能为空~'
+            }
+
+            if (exists(_this.destinationPath(_this.pageFileUrl, input))) {
+              return `页面已存在${this.pageFileUrl}目录中了，换个名字~`
+            }
+            return true;
+          }
+        })
+      } else if (exists(_this.destinationPath(_this.pageFileUrl, conf.pageName))) {
+        questions.push({
+          type: 'input',
+          name: 'pageName',
+          message: `页面已存在${_this.pageFileUrl}目录中了，换个名字:`,
+          validate: function(input) {
+            if (!input) {
+              return '页面名字不能为空~';
+            }
+            if (exists(_this.destinationPath(_this.pageFileUrl, input))) {
+              return `页面已存在${_this.pageFileUrl}目录中了，换个名字~`
+            }
+            return true
+          }
+        })
+      }
+
+      if (conf.styl === undefined) {
+        questions.push({
+          type: 'list',
+          name: 'cssPretreatment',
+          message: '是否添加css文件:',
+          choices: [{
+            name: 'Styl',
+            value: 'styl'
+          },{
+            name: '不需要',
+            value: 'none'
+          }]
+        })
+      }
+
+      inquirer.prompt(questions).then((answers) => {
+        answers.author = this.userName
+        if (conf.styl) {
+          answers.cssPretreatment = 'styl'
+        }
+        _.assign(this.conf, answers)
+        let date = new Date()
+        this.conf.date = (`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`)
+        this.conf.secondaryDomain = 's'
+        this.write(cb)
+      })
     })
+
   },
 
   /**
@@ -129,12 +132,7 @@ let Page = Base.extend({
     var pageName = conf.pageName
     var cssFileName = ''
     var pageFileUrl = this.pageFileUrl
-    var moduleName = conf.moduleName
-    if (moduleName) {
-      pageFileUrl = `${pageFileUrl}/${moduleName}`
-    }
     var pageUrl = `${pageFileUrl}/${pageName}/${pageName}`
-
     this.mkdir(`${pageFileUrl}/${pageName}`)
     this.template(conf.tmpId , 'page' , 'page.html', `${pageUrl}.html`, this, {
       delimiter: '$'
@@ -154,7 +152,7 @@ let Page = Base.extend({
       console.log(chalk.green(`    创建文件: ${cssFileName}`))
       console.log(chalk.green(`    创建文件: ${pageUrl}.js`))
       console.log()
-      console.log('    ' + chalk.bgGreen(`页面${pageName}创建成功！`))
+      console.log('    ' + chalk.magenta(`页面${pageName}创建成功！`))
       console.log()
     }.bind(this))
   },
