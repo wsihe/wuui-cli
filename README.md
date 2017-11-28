@@ -34,8 +34,8 @@ wuui p --name [pageName] --path [moduleName] --styl
 
 不选择模块，会在pages直接目录下生成文件，生成的文件结构如下：
 ```
-    ├── pages                         - 所有页面总目录
-   	│   ├── pageName              - 某一页面目录
+    ├── pages                       - 所有页面总目录
+    │   ├── pageName                - 某一页面目录
     │       ├── pageName.jade       - 页面html
     │       ├── pageName.js         - 页面级js
     │       ├── pageName.styl       - 页面级css
@@ -47,9 +47,9 @@ wuui p --name [pageName] --path [moduleName] --styl
 
 添加模块或者路径，可以在指定目录下生成文件，生成的文件结构如下：
 ```
-    ├── pages                     - 所有页面总目录
-    │   ├── moduleName            - 某一模块目录
-    │       ├── pageName          - 某一页面目录
+    ├── pages                       - 所有页面总目录
+    │   ├── moduleName              - 某一模块目录
+    │       ├── pageName            - 某一页面目录
     │           ├── page.html       - 页面html
     │           ├── page.js         - 页面级js
     │           ├── page.styl       - 页面级css
@@ -73,8 +73,8 @@ wuui c [controlName]
 执行 wuui c controlName ，生成的文件结构如下：
 
 ```
-    ├── controls                        - 所有控件总目录
-   	│   ├── controlName              - 某一控件目录
+    ├── controls                       - 所有控件总目录
+    │   ├── controlName                - 某一控件目录
     │       ├── controlName.jade       - 控件html
     │       ├── controlName.js         - 控件级js
     │       ├── controlName.styl       - 控件级css
