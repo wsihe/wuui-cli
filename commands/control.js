@@ -119,7 +119,7 @@ let Control = Base.extend({
     var fileUrl = this.fileUrl
     var pageUrl = `${fileUrl}/${controlName}/${controlName}`
     this.mkdir(`${fileUrl}/${controlName}`)
-    this.template(conf.tmpId , 'control' , 'control.html', `${pageUrl}.html`, this, {
+    this.template(conf.tmpId , 'control' , 'control.jade', `${pageUrl}.jade`, this, {
       delimiter: '$'
     })
     if (conf.cssPretreatment === 'styl') {
@@ -133,11 +133,11 @@ let Control = Base.extend({
         cb(controlName)
       }
       console.log()
-      console.log(chalk.green(`    创建文件: ${pageUrl}.html`))
+      console.log(chalk.green(`    创建文件: ${pageUrl}.jade`))
       console.log(chalk.green(`    创建文件: ${cssFileName}`))
       console.log(chalk.green(`    创建文件: ${pageUrl}.js`))
       console.log()
-      console.log('    ' + chalk.magenta(`控件${controlName}创建成功！`))
+      console.log('    ' + chalk.magenta(`控件${controlName} 创建成功！`))
       console.log()
     }.bind(this))
   },

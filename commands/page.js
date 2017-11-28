@@ -134,7 +134,7 @@ let Page = Base.extend({
     var pageFileUrl = this.pageFileUrl
     var pageUrl = `${pageFileUrl}/${pageName}/${pageName}`
     this.mkdir(`${pageFileUrl}/${pageName}`)
-    this.template(conf.tmpId , 'page' , 'page.html', `${pageUrl}.html`, this, {
+    this.template(conf.tmpId , 'page' , 'page.html', `${pageUrl}.jade`, this, {
       delimiter: '$'
     })
     if (conf.cssPretreatment === 'styl') {
@@ -148,7 +148,7 @@ let Page = Base.extend({
         cb(pageName)
       }
       console.log()
-      console.log(chalk.green(`    创建文件: ${pageUrl}.html`))
+      console.log(chalk.green(`    创建文件: ${pageUrl}.jade`))
       console.log(chalk.green(`    创建文件: ${cssFileName}`))
       console.log(chalk.green(`    创建文件: ${pageUrl}.js`))
       console.log()
