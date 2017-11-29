@@ -19,12 +19,16 @@ wuui p [pageName]
 wuui p --name [pageName] --path [moduleName] --styl
 
 ```
+#### 选项参数
 
-参数 --name 指定页面名称
+##### -n，--name
+指定控件名称
 
-参数 --path 指定页面生成的位置
+##### -p，--path
+指定页面生成的模块／位置
 
-参数 --styl 指定页面使用 styl
+##### -s，--styl
+指定控件使用 styl
 
 每个参数都是可缺省的!
 
@@ -43,7 +47,7 @@ wuui p --name [pageName] --path [moduleName] --styl
 
 #### 场景二
 
-执行：wuui p --name pageName --path moduleName --styl
+执行：wuui p --name pageName --path moduleName --styl / wuui p -n pageName -p moduleName -s
 
 添加模块或者路径，可以在指定目录下生成文件，生成的文件结构如下：
 ```
@@ -63,10 +67,13 @@ wuui control --name [controlName]
 wuui c [controlName]
 
 ```
+#### 选项参数
 
-参数 --name 指定控件名称
+##### -n，--name
+指定控件名称
 
-参数 --styl 指定控件使用 styl
+##### -s，--styl
+指定控件使用 styl
 
 每个参数都是可缺省的!
 
