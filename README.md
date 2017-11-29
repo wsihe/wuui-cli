@@ -2,6 +2,14 @@
 
 > wuui-cli node命令行辅助小工具，可生成模块、页面、控件文件结构
 
+### 全局安装
+
+#### 注意：node版本必须使用 node 6.0.0+ 稳定版
+
+```
+npm install -g wuui-cli
+
+```
 
 ### 1.添加 page 页面
 
