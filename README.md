@@ -113,3 +113,6 @@ wuui c -n controlName -s
     │       ├── controlName.styl       - 控件级css
 ```
 
+### 3.添加 report 文件
+
+待补充...
