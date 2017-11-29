@@ -16,16 +16,20 @@ wuui page --name [pageName] --path [moduleName] --styl
 ```
 wuui p [pageName]
 
-wuui p --name [pageName] --path [moduleName] --styl
+wuui p -n [pageName] -p [moduleName] -s
 
 ```
 #### 选项参数
 
-##### -n，--name
-指定控件名称
+##### -n，--name [pageName]
+指定控件名称，[pageName]为页面名称
 
-##### -p，--path
-指定页面生成的模块／位置
+##### -p，--path [moduleName]
+指定页面生成的模块／位置，[moduleName]为模块名
+[moduleName]也可以为具体模块的位置，支持多层嵌套，以'／'分割，例如:
+```
+wuui p -n name -p module/product -s
+```
 
 ##### -s，--styl
 指定控件使用 styl
@@ -33,8 +37,10 @@ wuui p --name [pageName] --path [moduleName] --styl
 每个参数都是可缺省的!
 
 #### 场景一
-
-执行：wuui p pageName
+```
+// 执行：
+wuui p pageName
+```
 
 不选择模块，会在pages直接目录下生成文件，生成的文件结构如下：
 ```
@@ -47,7 +53,13 @@ wuui p --name [pageName] --path [moduleName] --styl
 
 #### 场景二
 
-执行：wuui p --name pageName --path moduleName --styl / wuui p -n pageName -p moduleName -s
+```
+// 执行：
+wuui p --name pageName --path moduleName --styl
+// 或
+wuui p -n pageName -p moduleName -s
+
+ ```
 
 添加模块或者路径，可以在指定目录下生成文件，生成的文件结构如下：
 ```
@@ -69,15 +81,21 @@ wuui c [controlName]
 ```
 #### 选项参数
 
-##### -n，--name
-指定控件名称
+##### -n，--name [controlName]
+指定控件名称，controlName为控件名
 
 ##### -s，--styl
 指定控件使用 styl
 
 每个参数都是可缺省的!
+```
+// 执行
+wuui c controlName
+// 或
+wuui c -n controlName -s
 
-执行 wuui c controlName ，生成的文件结构如下：
+```
+生成的文件结构如下：
 
 ```
     ├── controls                       - 所有控件总目录

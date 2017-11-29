@@ -1,5 +1,5 @@
 /**
- * @desc 创建page类
+ * @desc 创建control类
  * @author  river
  */
 
