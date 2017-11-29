@@ -4,36 +4,29 @@
  * @desc <%= conf.description %>
  */
 
-import utils from '@/app/common/utils'
-import rest from '@/app/rest/rest'
-import Control from '@/app/base/control'
+(function (Asset) {
+  'use strict';
+  var Page = Asset.Page;
+  var utils = Asset.utils;
 
-var <%= conf.pageName %> = Control.extend({
+  var <%= conf.mName %>Page = Page.extend({
+    vm: null,
 
-  onCreate: function (params) {
-    var options = {
-      el: this.el,
-      data: {
+    onCreate: function (params) {
+      this.vm = new Vue({
+        el: this.el,
+        data: {},
+        methods: {
+          test: this.test.bind(this)
+        }
+      });
 
-      },
-      methods: {
-        handleClick: this.handleClick.bind(this),
-      }
-    };
-    this.proxy(options)
-    this.vm = new Vue(options)
-    this.init()
-  },
+    },
 
-  init () {
+    test: function () {
+    }
 
-  },
+  });
 
-  handleClick () {
-
-  }
-
-})
-
-export default <%= conf.pageName %>
-
+  Asset.<%= conf.mName %>Page = <%= conf.mName %>Page;
+})(window.Asset);

@@ -114,6 +114,7 @@ let Page = Base.extend({
         _.assign(this.conf, answers)
         let date = new Date()
         this.conf.date = (`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`)
+        this.conf.mName = Util.classify(this.conf.pageName)
         this.conf.secondaryDomain = 's'
         this.write(cb)
       })
@@ -136,7 +137,7 @@ let Page = Base.extend({
     var pageFileUrl = this.pageFileUrl
     var pageUrl = `${pageFileUrl}/${pageName}/${pageName}`
     this.mkdir(`${pageFileUrl}/${pageName}`)
-    this.template(conf.tmpId , 'page' , 'page.html', `${pageUrl}.jade`, this, {
+    this.template(conf.tmpId , 'page' , 'page.jade', `${pageUrl}.jade`, this, {
       delimiter: '$'
     })
     if (conf.cssPretreatment === 'styl') {

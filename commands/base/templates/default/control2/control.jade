@@ -1,0 +1,16 @@
+.modal.fade.in
+  .modal-backdrop.fade.in
+  .modal-dialog(style="z-index: 9999;top:80px;")
+    .modal-content
+      .modal-header
+        button.close(type='button', v-click="close()")
+          span(aria-hidden='true') ×
+          span.sr-only Close
+        h4.modal-title Modal title
+      .modal-body
+        .form-group
+          label 测试输入参数
+          input.form-control(type='text', v-model="text")
+      .modal-footer
+        button.btn.btn-default(type='button', v-click="close()", style="color:gray") Close
+        button.btn.btn-primary(type='button', v-click="confirm()") Save changes

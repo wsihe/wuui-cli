@@ -71,6 +71,20 @@ var Util = {
     return path.resolve(__dirname, '../../');
   },
 
+  // 转换字符串
+  makeString: function (object) {
+    if (object == null) {
+      return '';
+    }
+    return '' + object;
+  },
+
+  // 首字母大写
+  classify: function (str) {
+    str = Util.makeString(str);
+    return _.capitalize(_.camelCase(str.replace(/[\W_]/g, ' ')).replace(/\s/g, ''));
+  },
+
   // 获取package.json
   getPkgInfo: function () {
     var info = {};

@@ -99,6 +99,7 @@ let Control = Base.extend({
       _.assign(this.conf, answers)
       let date = new Date()
       this.conf.date = (`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`)
+      this.conf.mName = Util.classify(this.conf.controlName)
       this.conf.secondaryDomain = 's'
       this.write(cb)
     })

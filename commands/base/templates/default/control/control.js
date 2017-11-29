@@ -4,36 +4,43 @@
  * @desc <%= conf.description %>
  */
 
-import utils from '@/app/common/utils'
-import rest from '@/app/rest/rest'
-import Control from '@/app/base/control'
+(function (Asset) {
+  "use strict";
+  var utils = Asset.utils;
+  var Control = Asset.Control;
 
-var <%= conf.controlName %> = Control.extend({
+  var <%= conf.mName %>Panel = Control.extend({
+    vm: null,
 
-  onCreate: function (params) {
-    var options = {
-      el: this.el,
-      data: {
+    onCreate: function (params) {
+      var text = params.text;
+      this.vm = new Vue({
+        el: this.el,
+        data: {
+          text: text || ""
+        },
+        methods: {
+          close: this.destroy.bind(this),
+          confirm: this.confirm.bind(this)
+        },
+        watch: {
+          text: this.onTextChanged.bind(this)
+        }
+      });
+    },
 
-      },
-      methods: {
-        handleClick: this.handleClick.bind(this),
-      }
-    };
-    this.proxy(options)
-    this.vm = new Vue(options)
-    this.init()
-  },
+    onTextChanged: function () {
+      this.trigger("text:changed", this.vm.text);
+    },
 
-  init () {
+    confirm: function () {
+      this.setResult(RESULT_OK, this.vm.text);
+      this.destroy();
+    }
 
-  },
+  });
 
-  handleClick () {
+  Asset.<%= conf.mName %>Panel = <%= conf.mName %>Panel;
+})(window.Asset);
 
-  }
-
-})
-
-export default <%= conf.controlName %>
 
