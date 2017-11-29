@@ -1,9 +1,9 @@
-var path = require('path');
-var fs = require('fs');
-var os = require('os');
-var url = require('url');
-var _ = require('lodash');
-var chalk = require('chalk');
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
+const url = require('url');
+const _ = require('lodash');
+const chalk = require('chalk');
 
 
 var Util = {
@@ -30,25 +30,19 @@ var Util = {
     useStrict: /(\/\/.*\r?\n)*['"]use strict['"];?/g
   },
 
-  /**
-   * 缓存目录名
-   */
+  // 缓存目录名
   CACHE: '.cache',
 
-  /**
-   * 获取athena目录
-   */
-  getAthenaPath: function () {
-    var athenaPath = path.join(this.homedir(), '.athena');
-    if (!this.existsSync(athenaPath)) {
-      fs.mkdirSync(athenaPath);
+  // 获取目录
+  getWuuiPath: function () {
+    var wuuiPath = path.join(this.homedir(), '.athena');
+    if (!this.existsSync(wuuiPath)) {
+      fs.mkdirSync(wuuiPath);
     }
-    return athenaPath;
+    return wuuiPath;
   },
 
-  /**
-   * 获取用户目录
-   */
+  // 获取用户目录
   homedir: function () {
     function homedir() {
       var env = process.env;
@@ -72,190 +66,12 @@ var Util = {
     return typeof os.homedir === 'function' ? os.homedir : homedir;
   } (),
 
-  /**
-   * 变成字符串
-   */
-  makeString: function (object) {
-    if (object == null) {
-      return '';
-    }
-    return '' + object;
-  },
-
-  /**
-   * 首字母大写
-   */
-  classify: function (str) {
-    str = Util.makeString(str);
-    return _.capitalize(_.camelCase(str.replace(/[\W_]/g, ' ')).replace(/\s/g, ''));
-  },
-
-  decapitalize: function (str) {
-    str = Util.makeString(str);
-    return str.charAt(0).toLowerCase() + str.slice(1);
-  },
-
-  /**
-   * 拼写URL
-   */
-  urlJoin: function () {
-    function normalize(str) {
-      return str
-      .replace(/([\/]+)/g, '/')
-      .replace(/\/\?(?!\?)/g, '?')
-      .replace(/\/\#/g, '#')
-      .replace(/\:\//g, '://');
-    }
-
-    var joined = [].slice.call(arguments, 0).join('/');
-    return normalize(joined);
-  },
-
-  /**
-   * 解析sass @import
-   */
-  sassImports: function (content) {
-    var re = /\@import (["'])(.+?)\1;/g,
-        match = {},
-        results = [];
-    content = new String(content).replace(/\/\*.+?\*\/|\/\/.*(?=[\n\r])/g, '');
-    while (match = re.exec(content)) {
-      results.push(match[2]);
-    }
-    return results;
-  },
-
-  readJsonFile: function (fPath) {
-    var json = {};
-    if (Util.existsSync(fPath)) {
-      try {
-        json = JSON.parse(fs.readFileSync(fPath));
-      } catch (ex) {
-        console.log(chalk.red('读取文件' + fPath + '失败...！文件可能不存在，或有语法错误，请检查！'));
-        json = {};
-      }
-    }
-    return json;
-  },
-
-  getUrlParseSplit: function (value) {
-    var valueParse = url.parse(value);
-    var splitAfter = '';
-    var newValue = '';
-    if (valueParse.host) {
-      newValue = ['//', valueParse.host, valueParse.pathname].join('');
-    } else {
-      newValue = valueParse.pathname;
-    }
-    splitAfter = value.replace(newValue, '');
-    splitAfter = splitAfter ? splitAfter : '';
-    return {
-      pathname: newValue,
-      split: splitAfter
-    };
-  },
-
-
-  /**
-   * 判断是否是今天
-   */
-  isToday: function (time) {
-    return new Date().getTime() - new Date(time).getTime() < 86400000;
-  },
-
-  /**
-   * 获取文件名对应的md5，client模式
-   */
-  getHashName: function (id, mapJson) {
-    var ext = path.extname(id);
-    id = id.split(path.sep);
-    id = id.join('/');
-    var imagesIndex = id.indexOf('images/');
-    var jsIndex = id.indexOf('js/');
-    var cssIndex = id.indexOf('css/');
-    var index = Math.max(imagesIndex, jsIndex, cssIndex);
-    if (index < 0) {
-      return id;
-    }
-    var idPrefix = id.substr(0, index);
-    id = id.substr(index);
-    var rev = mapJson.rev;
-    var revByType = null;
-    if (!rev) {
-      return id;
-    }
-    if (Util.regexps.js.test(ext)) {
-      revByType = rev.js;
-    } else if (Util.regexps.css.test(ext)) {
-      revByType = rev.css;
-    } else if (Util.regexps.media.test(ext)) {
-      revByType = rev.img;
-    }
-    var splitAfter = '';
-    var idParse = this.getUrlParseSplit(id);
-    id = idParse.pathname;
-    splitAfter = idParse.split;
-    if (!revByType || !revByType[id]) {
-      return id;
-    }
-
-    return idPrefix + revByType[id] + splitAfter;
-  },
-
-  /**
-   * 获取静态资源路径信息
-   */
-  getStaticPath: function (fpath) {
-    var dirname = path.dirname(fpath);
-    var dirnameArr = [];
-    var splitFlag = '';
-    if (dirname.indexOf('\/') >= 0) {
-      splitFlag = '\/';
-    } else {
-      splitFlag = '\\';
-    }
-    dirnameArr = dirname.split(splitFlag);
-    var imagesIndex = dirnameArr.indexOf('images');
-    var cssIndex = dirnameArr.indexOf('css');
-    var jsIndex = dirnameArr.indexOf('js');
-    var index = Math.max(imagesIndex, jsIndex, cssIndex);
-    if (index >= 0) {
-      fpath = fpath.split(splitFlag).splice(index).join(splitFlag);
-    }
-    return {
-      index: index,
-      path: fpath
-    };
-  },
-
-  /**
-   * 通过文件路径，获取模块信息
-   */
-  getModuleInfoViaPath: function (fPath, appPath) {
-    var modulePathRelative = fPath.replace(appPath, '');
-    if (modulePathRelative === fPath) {
-      return null;
-    }
-    var folderNames = path.dirname(modulePathRelative).split(path.sep);
-    var moduleFolder = folderNames[0].length ? folderNames[0] : folderNames[1];
-    return moduleFolder;
-  },
-
-  originPathConvertToDistPath: function (originPath, modulePath) {
-    var modulePathAfter = originPath.replace(modulePath, '');
-    return path.join(modulePath, 'dist', '_', modulePathAfter);
-  },
-
-  /**
-   * 获取根目录
-   */
+  //获取根目录
   getRootPath: function () {
     return path.resolve(__dirname, '../../');
   },
 
-  /**
-   * 获取package.json
-   */
+  // 获取package.json
   getPkgInfo: function () {
     var info = {};
     try {
@@ -266,11 +82,9 @@ var Util = {
     return info;
   },
 
-  /**
-   * 获取配置
-   */
+  // 获取配置
   getConfig: function () {
-    var configPath = path.join(this.getAthenaPath(), 'config.json');
+    var configPath = path.join(this.getWuuiPath(), 'config.json');
     var config = {};
     if (this.existsSync(configPath)) {
       try {
@@ -281,19 +95,16 @@ var Util = {
     }
     return config;
   },
-  /**
-   * 写入11 配置
-   */
+
+  // 写入配置
   setConfig: function (config) {
-    var athenaPath = this.getAthenaPath();
+    var wuuiPath = this.getWuuiPath();
     if (typeof config === 'object') {
-      fs.writeFileSync(path.join(athenaPath, 'config.json'), JSON.stringify(config, null, 2));
+      fs.writeFileSync(path.join(wuuiPath, 'config.json'), JSON.stringify(config, null, 2));
     }
   },
 
-  /**
-   * 获取athena设置
-   */
+  // 获取设置
   getSetting: function () {
     var settingPath = path.join(this.getRootPath(), '.setting.json');
     var setting = {};
@@ -307,9 +118,7 @@ var Util = {
     return setting;
   },
 
-  /**
-   * 写入athena配置
-   */
+  // 写入配置
   setSetting: function (setting) {
     if (typeof setting === 'object') {
       fs.writeFileSync(path.join(this.getRootPath(), '.setting.json'), JSON.stringify(setting, null, 2));
@@ -361,7 +170,7 @@ var Util = {
     return 0;
   },
 
-  // 由于fs.existsSync 将会被废弃，需要另谋出路
+  // 由于fs.existsSync 将会被废弃，重写
   existsSync: function (fPath) {
     try {
       var stats = fs.statSync(fPath);
@@ -372,9 +181,7 @@ var Util = {
   },
 
 
-  /**
-   * Inspect anything.
-   */
+  //Inspect anything.
   inspect: function () {
     var _args = [].slice.call(arguments);
     console.log(_args.map(function (v, k) {

@@ -2,29 +2,25 @@
  * @desc 创建的基类
  * @author  river
  */
-const mkdirp = require('mkdirp');
-const memFs = require('mem-fs');
-const FileEditor = require('mem-fs-editor');
-const path = require('path');
-const fs = require('fs');
-const del = require('del');
-const pathIsAbsolute = require('path-is-absolute');
-const pathExists = require('path-exists');
-const request = require('request');
-const unzip = require('unzip');
-const crypto = require('crypto');
-const chalk = require('chalk');
+const mkdirp = require('mkdirp')
+const memFs = require('mem-fs')
+const FileEditor = require('mem-fs-editor')
+const path = require('path')
+const fs = require('fs')
+const del = require('del')
+const pathIsAbsolute = require('path-is-absolute')
+const pathExists = require('path-exists')
+const request = require('request')
+const unzip = require('unzip')
+const crypto = require('crypto')
+const chalk = require('chalk')
 const _ = require('lodash')
 
-const wrench = require('../../libs/wrench');
-const Class = require('./class');
-const Util = require('../../libs/index');
+// const wrench = require('../../libs/wrench');
+const Class = require('./class')
+const Util = require('../../libs/index')
 
-var setting = Util.getSetting();
-
-/**
- * 读取模板缓存
- */
+//读取模板缓存
 function readCache (path) {
   var _cache = {
     version : 0,
@@ -43,16 +39,12 @@ function readCache (path) {
   return _cache;
 }
 
-/**
- * 写入模板缓存
- */
+// 写入模板缓存
 function writeCache (content, _path) {
   fs.writeFileSync(_path, JSON.stringify(content), 'utf8');
 }
 
-/**
- * 文件md5
- */
+// 文件md5
 function md5File (filename, callback) {
   var sum = crypto.createHash('md5');
   if (callback && typeof callback === 'function') {
@@ -86,7 +78,7 @@ let Base = Class.extend({
     this.sharedFs = memFs.create();
     this.fs = FileEditor.create(this.sharedFs);
     this._ = _
-    this.sourceRoot(path.join(Util.getAthenaPath(), 'tmp'));
+    this.sourceRoot(path.join(Util.getWuuiPath(), 'tmp'));
     // 用于缓存模板JSON列表以快速查询
     this.onceReadCache = {waitInit: true};
     this.tmpNameList = [];
@@ -97,15 +89,6 @@ let Base = Class.extend({
    */
   mkdir: function () {
     mkdirp.sync.apply(mkdirp, arguments);
-  },
-
-  /**
-   * @desc 向目录下写入git占位文件
-   * @param {String} dirname 目录相对路径
-   */
-  writeGitKeepFile: function (dirname) {
-    var dirname = path.resolve(dirname);
-    fs.writeFileSync(path.join(dirname, '.gitkeep'), '这只是个占位文件，嘿嘿嘿~\n若当前目录下已有项目文件，可以删除之~', 'utf8');
   },
 
   /**
@@ -240,7 +223,7 @@ let Base = Class.extend({
    * @desc设置使用默认模板
    */
   setDefaultTmp: function () {
-    var tmpPath = path.join(Util.getAthenaPath(), 'tmp', 'templates');
+    var tmpPath = path.join(Util.getWuuiPath(), 'tmp', 'templates');
     if (!Util.existsSync(tmpPath)) {
       this.sourceRoot(path.join(__dirname));
     }
