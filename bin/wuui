@@ -48,7 +48,6 @@ program
     console.log()
   })
 
-// 创建模块
 function createModule (moduleName, option) {
   return new Promise(function (resolve, reject) {
     let mmodule = new MModule({
@@ -66,19 +65,16 @@ program
   .command('page [pageName]')
   .alias('p')
   .description('创建新的页面')
-  .option('--name [pageName]', '页面名称')
-  .option('--path [moduleName]', '模块名称')
-  .option('--styl', '启用stylus')
+  .option('-n, --name [pageName]', '页面名称')
+  .option('-p, --path [moduleName]', '模块名称')
+  .option('-s, --styl', '启用stylus')
   .action(function(pageName, option) {
     let page = new Page({
       pageName: pageName || option.name,
       moduleName: option.path,
       styl: option.styl
     })
-    // 创建页面
-    page.create(function () {
-
-    })
+    page.create()
   }).on('--help', function() {
     console.log('  Examples:');
     console.log('');
@@ -92,22 +88,19 @@ program
   .command('control [controlName]')
   .alias('c')
   .description('创建新的控件')
-  .option('--name [controlName]', '控件名称')
-  .option('--styl', '启用stylus')
+  .option('-n, --name [controlName]', '控件名称')
+  .option('-s, --styl', '启用stylus')
   .action(function(controlName, option) {
     let control = new Control({
       controlName: controlName || option.name,
       styl: option.styl
     })
-    // 创建页面
-    control.create(function(){
-
-    })
+    control.create()
   }).on('--help', function() {
     console.log('  Examples:');
     console.log('');
-    console.log('    $ wuui page name');
-    console.log('    $ wuui p name');
+    console.log('    $ wuui control name');
+    console.log('    $ wuui c name');
     console.log()
   })
 
