@@ -35,7 +35,7 @@ var Util = {
 
   // 获取目录
   getWuuiPath: function () {
-    var wuuiPath = path.join(this.homedir(), '.wuui');
+    var wuuiPath = path.join(this.homedir(), 'wuui-cli');
     if (!this.existsSync(wuuiPath)) {
       fs.mkdirSync(wuuiPath);
     }
