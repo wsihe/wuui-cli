@@ -15,9 +15,6 @@ const unzip = require('unzip')
 const crypto = require('crypto')
 const chalk = require('chalk')
 const _ = require('lodash')
-
-// const wrench = require('../../libs/wrench');
-const Class = require('./class')
 const Util = require('../../libs/index')
 
 //读取模板缓存
@@ -44,37 +41,13 @@ function writeCache (content, _path) {
   fs.writeFileSync(_path, JSON.stringify(content), 'utf8');
 }
 
-// 文件md5
-function md5File (filename, callback) {
-  var sum = crypto.createHash('md5');
-  if (callback && typeof callback === 'function') {
-    var fileStream = fs.createReadStream(filename);
-    fileStream.on('error', function (err) {
-      return callback(err, null);
-    });
-    fileStream.on('data', function (chunk) {
-      try {
-        sum.update(chunk);
-      } catch (ex) {
-        return callback(ex, null);
-      }
-    });
-    fileStream.on('end', function () {
-      return callback(null, sum.digest('hex'));
-    });
-  } else {
-    sum.update(fs.readFileSync(filename));
-    return sum.digest('hex');
-  }
-}
-
 /**
  * @class Base
  * @classdesc Base类
  */
-let Base = Class.extend({
+class Base {
 
-  construct: function () {
+  constructor() {
     this.sharedFs = memFs.create();
     this.fs = FileEditor.create(this.sharedFs);
     this._ = _
@@ -82,21 +55,21 @@ let Base = Class.extend({
     // 用于缓存模板JSON列表以快速查询
     this.onceReadCache = {waitInit: true};
     this.tmpNameList = [];
-  },
+  }
 
   /**
    * @desc 创建目录
    */
-  mkdir: function () {
+  mkdir () {
     mkdirp.sync.apply(mkdirp, arguments);
-  },
+  }
 
   /**
    * @desc 资源根路径
    * @param {String} rootPath 资源根目录
    * @return {String} 资源根路径
    */
-  sourceRoot: function (rootPath) {
+  sourceRoot (rootPath) {
     if (typeof rootPath === 'string') {
       this._sourceRoot = path.resolve(rootPath);
     }
@@ -104,26 +77,26 @@ let Base = Class.extend({
       this.mkdir(this._sourceRoot);
     }
     return this._sourceRoot;
-  },
+  }
 
   /**
    * @desc 获取模板路径
    * @return {String} 模板路径
    */
-  templatePath: function () {
+  templatePath () {
     var filepath = path.join.apply(path, arguments);
     if (!pathIsAbsolute(filepath)) {
       filepath = path.join(this.sourceRoot(), 'templates' , filepath);
     }
     return filepath;
-  },
+  }
 
   /**
    * @description 获取生成代码的根目录
    * @param {String} rootPath 根目录
    * @return {String} 路径
    */
-  destinationRoot: function (rootPath) {
+  destinationRoot (rootPath) {
     if (typeof rootPath === 'string') {
       this._destinationRoot = path.resolve(rootPath);
 
@@ -134,20 +107,20 @@ let Base = Class.extend({
       process.chdir(rootPath);
     }
     return this._destinationRoot || process.cwd();
-  },
+  }
 
   /**
    * @desc 获取生成代码的目标路径
    * @return {String} 路径
    */
-  destinationPath: function () {
+  destinationPath () {
     var filepath = path.join.apply(path, arguments);
     if (!pathIsAbsolute(filepath)) {
       filepath = path.join(this.destinationRoot(), filepath);
     }
 
     return filepath;
-  },
+  }
 
   /**
    * @desc 渲染模板
@@ -159,7 +132,7 @@ let Base = Class.extend({
    * @param {Object} options 生成选项
    * @return {Object} this
    */
-  template: function (tmpId, type, source, dest, data, options) {
+  template (tmpId, type, source, dest, data, options) {
     if (typeof dest !== 'string') {
       options = data;
       data = dest;
@@ -172,7 +145,7 @@ let Base = Class.extend({
       options
     );
     return this;
-  },
+  }
 
   /**
    * @desc 拷贝并渲染模板
@@ -182,7 +155,7 @@ let Base = Class.extend({
    * @param {String} dest 生成目标文件路径
    * @return {Object} this
    */
-  copy: function (tpl, type, source, dest) {
+  copy (tpl, type, source, dest) {
     var tmpId = 'default';
     dest = dest || source;
     if(tpl.tmpName) {
@@ -193,47 +166,47 @@ let Base = Class.extend({
 
     this.template(tmpId, type, source, dest);
     return this;
-  },
+  }
 
   /**
    * @desc 获取本地页面配置
    * @param {function} cbk
    * @return {Object} this
    */
-  getLocalConf: function (cbk) {
+  getLocalConf (cbk) {
     var that = this;
     var cache = readCache(path.join(that.sourceRoot(), '_cache.json'))
     that.setDefaultTmp();
     cbk(cache);
-  },
+  }
 
   /**
    * @desc 获取远程页面配置
    * @param {function} cbk
    * @return {Object} this
    */
-  getRemoteConf: function (cbk) {
+  getRemoteConf (cbk) {
     var that = this;
     var cache = readCache(path.join(that.sourceRoot(), '_cache.json'))
     that.setDefaultTmp();
     cbk(cache);
-  },
+  }
 
   /**
    * @desc设置使用默认模板
    */
-  setDefaultTmp: function () {
+  setDefaultTmp () {
     var tmpPath = path.join(Util.getWuuiPath(), 'tmp', 'templates');
     if (!Util.existsSync(tmpPath)) {
       this.sourceRoot(path.join(__dirname));
     }
-  },
+  }
 
   /**
    * @desc 通过模板名称获取模板ID
    * @param {string} tmpName
    */
-  getTmpIdByTmpName: function(tmpName) {
+  getTmpIdByTmpName (tmpName) {
     if(this.onceReadCache.waitInit) {
       readCache(path.join(this.sourceRoot(), '_cache.json')).items.forEach(function(item) {
         this.onceReadCache[item.name] = item._id;
@@ -246,6 +219,6 @@ let Base = Class.extend({
     }
     return this.onceReadCache[tmpName];
   }
-});
+}
 
 module.exports = Base;

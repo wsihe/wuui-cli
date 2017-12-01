@@ -68,7 +68,7 @@ var Util = {
 
   //获取根目录
   getRootPath: function () {
-    return path.resolve(__dirname, '../../');
+    return path.resolve(__dirname, '../');
   },
 
   // 转换字符串

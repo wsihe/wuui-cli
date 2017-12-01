@@ -13,32 +13,32 @@ const uuid = require('uuid')
 const Base = require('./base/base')
 const Util = require('../libs/index')
 
-let MModule = Base.extend({
+class MModule extends Base {
   /**
    * @constructor
    * @param {Object} options
    * @param {String} [options.moduleName] - 模块名称
    */
-  construct: function (options) {
+  constructor (options) {
+    super()
     this.conf = _.assign({
       moduleName: null,
       date: null
     }, options);
-    this.super.apply(this, arguments);
     this.init();
-  },
+  }
 
-  init: function () {
+  init () {
     var userHome = Util.homedir();
     this.userName = process.env.USER || path.basename(userHome);
     console.log(chalk.magenta(this.userName + '开始创建模块!'));
-  },
+  }
 
   /**
    * @desc 输出询问信息
    * @param {Function} cb - 回调
    */
-  talk: function (cb) {
+  talk (cb) {
     var prompts = [];
     var conf = this.conf;
     if (typeof conf.moduleName !== 'string') {
@@ -78,13 +78,13 @@ let MModule = Base.extend({
       _.assign(this.conf, answers)
       this.write(cb)
     })
-  },
+  }
 
   /**
    * @desc 创建目录
    * @param {Function} cb - 回调
    */
-  write: function (cb) {
+  write (cb) {
     var conf = this.conf
     conf.moduleId = uuid.v1()
     this.mkdir(conf.moduleName)
@@ -99,15 +99,15 @@ let MModule = Base.extend({
       console.log(chalk.yellow('    请执行 cd ' + conf.moduleName + ' 进入到模块下开始工作吧！'))
       console.log()
     }.bind(this))
-  },
+  }
 
   /**
    * @desc 创建项目
    * @param {Function} cb - 创建完后的回调
    */
-  create: function (cb) {
+  create (cb) {
     this.talk(cb);
   }
-});
+}
 
 module.exports = MModule;

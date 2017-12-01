@@ -12,32 +12,32 @@ const inquirer = require('inquirer')
 const Base = require('./base/base')
 const Util = require('../libs/index')
 
-let Page = Base.extend({
+class Page extends Base {
   /**
    * @constructor
    * @param {Object} options
    * @param {String} [options.pageName] - 页面名称
    * @param {Boolean} [options.styl] - 是否使用styl
    */
-  construct: function (options) {
+  constructor (options) {
+    super()
     this.conf = _.assign({
       moduleName: null,
       pageName: null
     }, options)
-    this.super.apply(this, arguments)
     this.init()
-  },
+  }
 
-  init: function () {
+  init () {
     var userHome = Util.homedir();
     this.userName = process.env.USER || path.basename(userHome)
-  },
+  }
 
   /**
    * @desc 输出询问信息
    * @param {Function} cb - 回调
    */
-  talk: function (cb) {
+  talk (cb) {
 
     var prompt = []
     var conf = this.conf
@@ -120,13 +120,13 @@ let Page = Base.extend({
       })
     })
 
-  },
+  }
 
   /**
    * @desc 创建目录，拷贝模板
    * @param {Function} cb - 回调
    */
-  write: function (cb) {
+  write (cb) {
 
     var conf = this.conf
     conf.tmpName = undefined
@@ -158,18 +158,18 @@ let Page = Base.extend({
       console.log('    ' + chalk.magenta(`页面${pageName}创建成功！`))
       console.log()
     }.bind(this))
-  },
+  }
 
   /**
    * @desc 创建项目
    * @param {Function} cb - 回调
    */
-  create: function (cb) {
+  create (cb) {
     var that = this
     this.getLocalConf(function(){
       that.talk(cb)
     })
   }
-});
+}
 
 module.exports = Page
