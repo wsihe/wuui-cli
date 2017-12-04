@@ -31,7 +31,6 @@ class MModule extends Base {
   init () {
     var userHome = Util.homedir();
     this.userName = process.env.USER || path.basename(userHome);
-    console.log(chalk.magenta(this.userName + '开始创建模块!'));
   }
 
   /**
@@ -87,16 +86,15 @@ class MModule extends Base {
   write (cb) {
     var conf = this.conf
     conf.moduleId = uuid.v1()
-    this.mkdir(conf.moduleName)
+    var pageFileUrl = 'src/app/pages'
+    this.mkdir(`${pageFileUrl}/${conf.moduleName}`)
 
     this.fs.commit(function () {
       if (typeof cb === 'function') {
         cb(conf.moduleName)
       }
       console.log()
-      console.log('    ' + chalk.bgGreen('模块' + conf.moduleName + '创建成功！'))
-      console.log()
-      console.log(chalk.yellow('    请执行 cd ' + conf.moduleName + ' 进入到模块下开始工作吧！'))
+      console.log('    ' + chalk.green('模块' + conf.moduleName + '创建成功！'))
       console.log()
     }.bind(this))
   }

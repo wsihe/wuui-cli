@@ -39,7 +39,10 @@ program
   .description('创建新的模块')
   .option('--name [moduleName]', '模块名称')
   .action(function(moduleName, option) {
-    createModule(moduleName, option)
+    let mmodule = new MModule({
+      moduleName: moduleName || option.name
+    })
+    mmodule.create()
   }).on('--help', function() {
     console.log('  Examples:')
     console.log('')
@@ -47,18 +50,6 @@ program
     console.log('    $ wuui m name')
     console.log()
   })
-
-function createModule (moduleName, option) {
-  return new Promise(function (resolve, reject) {
-    let mmodule = new MModule({
-      moduleName: moduleName || option.name,
-      moduleDescription: option.description,
-    })
-    mmodule.create(function () {
-
-    })
-  })
-}
 
 // Command: wuui page [pageName]
 program
